@@ -56,7 +56,9 @@ rowindex = 4
 funcendstr = ")\nprint(\"res:\", res)\n\n"
 param_null = "param_%d = None\n"
 param_pu_char = "param_%d = ctypes.create_string_buffer(%s)\n"
+param_pu_char_in = "param_%d = r\"%s\"\n"
 param_pu_int = "param_%d = pointer(c_int(%s))\n"
+param_u_int = "param_%d = c_int(%s)\n"
 
 for i in range(rowindex, nrows):
     colindex = 0
@@ -74,13 +76,20 @@ for i in range(rowindex, nrows):
                 param_type = sheet0.cell_value(j, colindex + 3)
                 param_value = sheet0.cell_value(j, colindex + 4)
                 #print("param_att:%s\nparam_type:%s\nparam_value:%s\n"%(param_att, param_type, param_value))
-                if("out" == param_att and "unsigned char*" == param_type):
-                    if(0 == int(param_value)):
-                        testCase.write(param_null%(j - i))
+                if("unsigned char*" == param_type):
+                    if("out" == param_att):
+                        if(0 == int(param_value)):
+                            testCase.write(param_null%(j - i))
+                        else:
+                            testCase.write(param_pu_char%(j - i, param_value))
+                    elif("in" == param_att):
+                        testCase.write(param_pu_char_in%(j - i, param_value))
                     else:
-                        testCase.write(param_pu_char%(j - i, param_value))
-                elif("in/out" == param_att and "int*" == param_type):
+                        color.printRed("error")
+                elif("int*" == param_type):
                     testCase.write(param_pu_int%(j - i, param_value))
+                elif("int" == param_type):
+                    testCase.write(param_u_int%(j - i, param_value))
                 else:
                     color.printRed("error")
             else:
