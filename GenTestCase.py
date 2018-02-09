@@ -57,8 +57,9 @@ funcendstr = ")\nprint(\"res:\", res)\n\n"
 param_null = "param_%d = None\n"
 param_pu_char = "param_%d = ctypes.create_string_buffer(%s)\n"
 param_pu_char_in = "param_%d = r\"%s\"\n"
-param_pu_int = "param_%d = pointer(c_int(%s))\n"
-param_u_int = "param_%d = c_int(%s)\n"
+param_p_int = "param_%d = pointer(c_int(%s))\n"
+param_int = "param_%d = c_int(%s)\n"
+param_u_long = "param_%d = c_ulong(%s)\n"
 
 for i in range(rowindex, nrows):
     colindex = 0
@@ -87,9 +88,11 @@ for i in range(rowindex, nrows):
                     else:
                         color.printRed("error")
                 elif("int*" == param_type):
-                    testCase.write(param_pu_int%(j - i, param_value))
+                    testCase.write(param_p_int%(j - i, param_value))
                 elif("int" == param_type):
-                    testCase.write(param_u_int%(j - i, param_value))
+                    testCase.write(param_int%(j - i, param_value))
+                elif("unsigned long" == param_type):
+                    testCase.write(param_u_long%(j - i, param_value))
                 else:
                     color.printRed("error")
             else:
@@ -117,11 +120,14 @@ for i in range(rowindex, nrows):
                         testCase.write("\tbuf = param_%d.value.decode('utf-8')\n"%(j - i))
                         testCase.write("\tprint(\"%s:%%s\"%%(buf))\n"%(param_name))
                         testCase.write("else:\n")
-                        testCase.write("\tprint(\"%s:None\\n\")\n"%(param_name))
+                        testCase.write("\tprint(\"%s:None\")\n"%(param_name))
                     elif("int*" == param_type):
                         testCase.write("print(\"%s:%%s\"%%(param_%d[0]))\n"%(param_name, j - i))
             else:
                 break
+        testCase.write("print('\\n')")
         testCase.write("\n")
+
+        #输出参数根据返回值重新申请缓存区
 
 testCase.close()
