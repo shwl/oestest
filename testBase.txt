@@ -4,3 +4,7 @@
 import os
 import ctypes
 from ctypes import *
+
+import sys
+sys.path.append("../")
+import color

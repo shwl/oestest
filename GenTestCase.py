@@ -8,6 +8,10 @@ import color
 
 testCasePath = os.getcwd() + "/testCase/"   #测试脚本生成目标路径
 
+def PauseIfError(testCase, indentation):
+    testCase.write(indentation + "color.printRed(\"不符合预期结果,Enter键继续\\n\")\n")
+    testCase.write(indentation + "input()\n")
+
 #打印输出参数
 def PrintOutParam(sheet_obj, testCase, funcname, i, nrows, colindex, indentation):
     #打印输出参数
@@ -111,6 +115,8 @@ def GenTestFunction(sheet_obj, testCase, tgdll):
             GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, False)
             testCase.write("if(res == defaultres):\n");
             GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, True)
+            testCase.write("if(res != defaultres):\n");
+            PauseIfError(testCase, "\t")
 
 #生成测试动态库信息
 def GenTestDllInfo(sheet_obj, testCase):
@@ -155,14 +161,19 @@ def ReadConfigFile(excelFile, testCasePath):
     book = xlrd.open_workbook(excelFile)    #得到Excel文件的book对象，实例化对象
     sheet_count = len(book.sheets())        #获得sheet个数
     print("sheet_count:", sheet_count)
+    
+    runAllCase = open(testCasePath + "RunAllCase.py", "w", encoding = 'utf-8')
+    runAllCase.write("# -*- coding: UTF-8 -*- \n\n");
+
     for index in range(sheet_count):
-        sheet_obj = book.sheet_by_index(index)     #通过sheet索引获得sheet对象
-        sheet_name = book.sheet_names()[index]  #获得指定索引的sheet表名字
+        sheet_obj = book.sheet_by_index(index)      #通过sheet索引获得sheet对象
+        sheet_name = book.sheet_names()[index]      #获得指定索引的sheet表名字
         GenTestCase(sheet_obj, sheet_name)
+        runAllCase.write("import %s\n"%(sheet_name));
+    runAllCase.close()
         
 def main():
     excelFile = r"test.xlsx"
-    
     ReadConfigFile(excelFile, testCasePath)
 if __name__ == "__main__":
     main()
