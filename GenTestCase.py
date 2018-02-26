@@ -35,7 +35,6 @@ def PrintOutParam(sheet_obj, testCase, funcname, i, nrows, colindex, indentation
                     testCase.write(indentation + "print(\"%s:%%s\"%%(param_%d[0]))\n"%(param_name, j - i))
         else:
             break
-    testCase.write(indentation + "print('\\n')")
     testCase.write(indentation + "\n")
 
 #生成参数列表和测试函数
@@ -109,11 +108,12 @@ def GenTestFunction(sheet_obj, testCase, tgdll):
         if(0 == len(funcname)):
             continue
         else:
+            testCase.write("print('\\n')\n")
             defaultres = int(sheet_obj.cell_value(i, colindex + 1))
             testCase.write("defaultres = %d\nfuncname = '%s'\n"%(defaultres, funcname));
             print("funcname:%s\ndefaultres:%d\n"%(funcname, defaultres))
             GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, False)
-            testCase.write("if(res == defaultres):\n");
+            testCase.write("if(res == 0):\n");
             GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, True)
             testCase.write("if(res != defaultres):\n");
             PauseIfError(testCase, "\t")
