@@ -1,0 +1,275 @@
+PKCS11_DECLARE_FUNCTION(C_Initialize, (void *init_args));
+	PKCS11_DECLARE_FUNCTION(C_Finalize, (void *reserved));
+	PKCS11_DECLARE_FUNCTION(C_GetInfo, (CK_INFO *info));
+	PKCS11_DECLARE_FUNCTION(C_GetFunctionList,
+		(CK_FUNCTION_LIST **function_list));
+
+	PKCS11_DECLARE_FUNCTION(C_GetSlotList,
+		(unsigned char token_present, CK_SLOT_ID *slot_list,
+		unsigned long *count));
+	PKCS11_DECLARE_FUNCTION(C_GetSlotInfo,
+		(CK_SLOT_ID slot_id, CK_SLOT_INFO *info));
+	PKCS11_DECLARE_FUNCTION(C_GetTokenInfo,
+		(CK_SLOT_ID slot_id, CK_TOKEN_INFO *info));
+	PKCS11_DECLARE_FUNCTION(C_WaitForSlotEvent,
+		(CK_FLAGS flags, CK_SLOT_ID *slot, void *reserved));
+	PKCS11_DECLARE_FUNCTION(C_GetMechanismList,
+		(CK_SLOT_ID slot_id,
+		CK_MECHANISM_TYPE *mechanism_list,
+		unsigned long *count));
+	PKCS11_DECLARE_FUNCTION(C_GetMechanismInfo,
+		(CK_SLOT_ID slot_id, CK_MECHANISM_TYPE type,
+		CK_MECHANISM_INFO *info));
+	PKCS11_DECLARE_FUNCTION(C_InitToken,
+		(CK_SLOT_ID slot_id, unsigned char *pin,
+		unsigned long pin_len, unsigned char *label));
+	PKCS11_DECLARE_FUNCTION(C_InitPIN,
+		(CK_SESSION_HANDLE session, unsigned char *pin,
+		unsigned long pin_len));
+	PKCS11_DECLARE_FUNCTION(C_SetPIN,
+		(CK_SESSION_HANDLE session, unsigned char *old_pin,
+		unsigned long old_len, unsigned char *new_pin,
+		unsigned long new_len));
+
+	PKCS11_DECLARE_FUNCTION(C_OpenSession,
+		(CK_SLOT_ID slot_id, CK_FLAGS flags,
+		void *application, CK_NOTIFY notify,
+		CK_SESSION_HANDLE *session));
+	PKCS11_DECLARE_FUNCTION(C_CloseSession, (CK_SESSION_HANDLE session));
+	PKCS11_DECLARE_FUNCTION(C_CloseAllSessions, (CK_SLOT_ID slot_id));
+	PKCS11_DECLARE_FUNCTION(C_GetSessionInfo,
+		(CK_SESSION_HANDLE session,
+		CK_SESSION_INFO *info));
+	PKCS11_DECLARE_FUNCTION(C_GetOperationState,
+		(CK_SESSION_HANDLE session,
+		unsigned char *operation_state,
+		unsigned long *operation_state_len));
+	PKCS11_DECLARE_FUNCTION(C_SetOperationState,
+		(CK_SESSION_HANDLE session,
+		unsigned char *operation_state,
+		unsigned long operation_state_len,
+		CK_OBJECT_HANDLE encryption_key,
+		CK_OBJECT_HANDLE authentication_key));
+	PKCS11_DECLARE_FUNCTION(C_Login,
+		(CK_SESSION_HANDLE session, CK_USER_TYPE user_type,
+		unsigned char *pin, unsigned long pin_len));
+	PKCS11_DECLARE_FUNCTION(C_Logout, (CK_SESSION_HANDLE session));
+
+	PKCS11_DECLARE_FUNCTION(C_CreateObject,
+		(CK_SESSION_HANDLE session,
+		CK_ATTRIBUTE *templ,
+		unsigned long count, CK_OBJECT_HANDLE *object));
+	PKCS11_DECLARE_FUNCTION(C_CopyObject,
+		(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE object,
+	CK_ATTRIBUTE *templ, unsigned long count,
+		CK_OBJECT_HANDLE *new_object));
+	PKCS11_DECLARE_FUNCTION(C_DestroyObject,
+		(CK_SESSION_HANDLE session,
+		CK_OBJECT_HANDLE object));
+	PKCS11_DECLARE_FUNCTION(C_GetObjectSize,
+		(CK_SESSION_HANDLE session,
+		CK_OBJECT_HANDLE object,
+		unsigned long *size));
+	PKCS11_DECLARE_FUNCTION(C_GetAttributeValue,
+		(CK_SESSION_HANDLE session,
+		CK_OBJECT_HANDLE object,
+		CK_ATTRIBUTE *templ,
+		unsigned long count));
+	PKCS11_DECLARE_FUNCTION(C_SetAttributeValue,
+		(CK_SESSION_HANDLE session,
+		CK_OBJECT_HANDLE object,
+		CK_ATTRIBUTE *templ,
+		unsigned long count));
+	PKCS11_DECLARE_FUNCTION(C_FindObjectsInit,
+		(CK_SESSION_HANDLE session,
+		CK_ATTRIBUTE *templ,
+		unsigned long count));
+	PKCS11_DECLARE_FUNCTION(C_FindObjects,
+		(CK_SESSION_HANDLE session,
+		CK_OBJECT_HANDLE *object,
+		unsigned long max_object_count,
+		unsigned long *object_count));
+	PKCS11_DECLARE_FUNCTION(C_FindObjectsFinal,
+		(CK_SESSION_HANDLE session));
+
+	PKCS11_DECLARE_FUNCTION(C_EncryptInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_Encrypt,
+		(CK_SESSION_HANDLE session,
+		unsigned char *data, unsigned long data_len,
+		unsigned char *encrypted_data,
+		unsigned long *encrypted_data_len));
+	PKCS11_DECLARE_FUNCTION(C_EncryptUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len,
+		unsigned char *encrypted_part,
+		unsigned long *encrypted_part_len));
+	PKCS11_DECLARE_FUNCTION(C_EncryptFinal,
+		(CK_SESSION_HANDLE session,
+		unsigned char *last_encrypted_part,
+		unsigned long *last_encrypted_part_len));
+
+	PKCS11_DECLARE_FUNCTION(C_DecryptInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_Decrypt,
+		(CK_SESSION_HANDLE session,
+		unsigned char *encrypted_data,
+		unsigned long encrypted_data_len,
+		unsigned char *data, unsigned long *data_len));
+	PKCS11_DECLARE_FUNCTION(C_DecryptUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *encrypted_part,
+		unsigned long encrypted_part_len,
+		unsigned char *part, unsigned long *part_len));
+	PKCS11_DECLARE_FUNCTION(C_DecryptFinal,
+		(CK_SESSION_HANDLE session,
+		unsigned char *last_part,
+		unsigned long *last_part_len));
+
+	PKCS11_DECLARE_FUNCTION(C_DigestInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism));
+	PKCS11_DECLARE_FUNCTION(C_Digest,
+		(CK_SESSION_HANDLE session,
+		unsigned char *data, unsigned long data_len,
+		unsigned char *digest,
+		unsigned long *digest_len));
+	PKCS11_DECLARE_FUNCTION(C_DigestUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len));
+	PKCS11_DECLARE_FUNCTION(C_DigestKey,
+		(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_DigestFinal,
+		(CK_SESSION_HANDLE session,
+		unsigned char *digest,
+		unsigned long *digest_len));
+
+	PKCS11_DECLARE_FUNCTION(C_SignInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_Sign,
+		(CK_SESSION_HANDLE session,
+		unsigned char *data, unsigned long data_len,
+		unsigned char *signature,
+		unsigned long *signature_len));
+	PKCS11_DECLARE_FUNCTION(C_SignUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len));
+	PKCS11_DECLARE_FUNCTION(C_SignFinal,
+		(CK_SESSION_HANDLE session,
+		unsigned char *signature,
+		unsigned long *signature_len));
+	PKCS11_DECLARE_FUNCTION(C_SignRecoverInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_SignRecover,
+		(CK_SESSION_HANDLE session,
+		unsigned char *data, unsigned long data_len,
+		unsigned char *signature,
+		unsigned long *signature_len));
+
+	PKCS11_DECLARE_FUNCTION(C_VerifyInit,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_Verify,
+		(CK_SESSION_HANDLE session,
+		unsigned char *data, unsigned long data_len,
+		unsigned char *signature,
+		unsigned long signature_len));
+	PKCS11_DECLARE_FUNCTION(C_VerifyUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len));
+	PKCS11_DECLARE_FUNCTION(C_VerifyFinal,
+		(CK_SESSION_HANDLE session,
+		unsigned char *signature,
+		unsigned long signature_len));
+	PKCS11_DECLARE_FUNCTION(C_VerifyRecoverInit,
+		(CK_SESSION_HANDLE session,
+	CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE key));
+	PKCS11_DECLARE_FUNCTION(C_VerifyRecover,
+		(CK_SESSION_HANDLE session,
+		unsigned char *signature,
+		unsigned long signature_len,
+		unsigned char *data,
+		unsigned long *data_len));
+
+	PKCS11_DECLARE_FUNCTION(C_DigestEncryptUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len,
+		unsigned char *encrypted_part,
+		unsigned long *encrypted_part_len));
+	PKCS11_DECLARE_FUNCTION(C_DecryptDigestUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *encrypted_part,
+		unsigned long encrypted_part_len,
+		unsigned char *part,
+		unsigned long *part_len));
+	PKCS11_DECLARE_FUNCTION(C_SignEncryptUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *part, unsigned long part_len,
+		unsigned char *encrypted_part,
+		unsigned long *encrypted_part_len));
+	PKCS11_DECLARE_FUNCTION(C_DecryptVerifyUpdate,
+		(CK_SESSION_HANDLE session,
+		unsigned char *encrypted_part,
+		unsigned long encrypted_part_len,
+		unsigned char *part,
+		unsigned long *part_len));
+
+	PKCS11_DECLARE_FUNCTION(C_GenerateKey,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_ATTRIBUTE *templ,
+		unsigned long count,
+		CK_OBJECT_HANDLE *key));
+	PKCS11_DECLARE_FUNCTION(C_GenerateKeyPair,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_ATTRIBUTE *public_key_template,
+		unsigned long public_key_attribute_count,
+		CK_ATTRIBUTE *private_key_template,
+		unsigned long private_key_attribute_count,
+		CK_OBJECT_HANDLE *public_key,
+		CK_OBJECT_HANDLE *private_key));
+	PKCS11_DECLARE_FUNCTION(C_WrapKey,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE wrapping_key,
+		CK_OBJECT_HANDLE key,
+		unsigned char *wrapped_key,
+		unsigned long *wrapped_key_len));
+	PKCS11_DECLARE_FUNCTION(C_UnwrapKey,
+		(CK_SESSION_HANDLE session,
+	CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE unwrapping_key,
+		unsigned char *wrapped_key,
+		unsigned long wrapped_key_len,
+		CK_ATTRIBUTE *templ,
+		unsigned long attribute_count,
+		CK_OBJECT_HANDLE *key));
+	PKCS11_DECLARE_FUNCTION(C_DeriveKey,
+		(CK_SESSION_HANDLE session,
+		CK_MECHANISM *mechanism,
+		CK_OBJECT_HANDLE base_key,
+		CK_ATTRIBUTE *templ,
+		unsigned long attribute_count,
+		CK_OBJECT_HANDLE *key));
+
+	PKCS11_DECLARE_FUNCTION(C_SeedRandom,
+		(CK_SESSION_HANDLE session, unsigned char *seed,
+		unsigned long seed_len));
+	PKCS11_DECLARE_FUNCTION(C_GenerateRandom,
+		(CK_SESSION_HANDLE session,
+		unsigned char *random_data,
+		unsigned long random_len));
+
+	PKCS11_DECLARE_FUNCTION(C_GetFunctionStatus, (CK_SESSION_HANDLE session));
+	PKCS11_DECLARE_FUNCTION(C_CancelFunction, (CK_SESSION_HANDLE session));
