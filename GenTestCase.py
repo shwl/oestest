@@ -50,6 +50,8 @@ def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex
     param_p_int = "param_%d = pointer(c_int(%s))\n"                 #int*参数
     param_int = "param_%d = c_int(%s)\n"                            #int参数
     param_u_long = "param_%d = c_ulong(%s)\n"                       #unsigned long参数
+    param_long = "param_%d = c_long(%s)\n"                         #long参数
+    param_wchar = "param_%d = c_wchar_p(%s)\n"                     #wchar_t参数
 
     for j in range(i, nrows):
         funcname1 = sheet_obj.cell_value(j, colindex)
@@ -78,6 +80,10 @@ def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex
                     testCase.write(param_int%(j - i, param_value))
                 elif("unsigned long" == param_type):
                     testCase.write(param_u_long%(j - i, param_value))
+                elif("long" == param_type):
+                    testCase.write(param_long % (j - i, param_value))
+                elif ("wchar_t*" == param_type):
+                    testCase.write(param_wchar % (j - i, param_value))
                 else:
                     color.printRed("error")
         else:
@@ -90,6 +96,9 @@ def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex
     if(j + 1 == nrows):
         j = j + 1
     for k in range(i, j):
+        param = sheet_obj.cell_value(i, colindex + 2)
+        if 0 == len(param):
+            break;
         if(k != i):
             testCase.write(", ")
         testCase.write("param_%d"%(k - i))
@@ -101,22 +110,30 @@ def GenTestFunction(sheet_obj, testCase, tgdll):
     nrows = sheet_obj.nrows    #获取行总数
     print("sheet_nrows:", nrows)
     rowindex = 4        #测试函数读取起始行
-    
+    isRetry = False;
     for i in range(rowindex, nrows):
         colindex = 0    #起始列
         funcname = sheet_obj.cell_value(i, colindex)
         if(0 == len(funcname)):
+            paramType = sheet_obj.cell_value(i, colindex + 2)
+            if -1 != paramType.find("out"):
+               isRetry = True;
             continue
         else:
             testCase.write("print('\\n')\n")
             defaultres = int(sheet_obj.cell_value(i, colindex + 1))
             testCase.write("defaultres = %d\nfuncname = '%s'\n"%(defaultres, funcname));
-            print("funcname:%s\ndefaultres:%d\n"%(funcname, defaultres))
+            print("funcname:%s\tdefaultres:%d\n"%(funcname, defaultres))
             GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, False)
-            testCase.write("if(res == 0):\n");
-            GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, True)
+            paramType = sheet_obj.cell_value(i, colindex + 2);
+            if -1 != paramType.find("out"):
+               isRetry = True;
+            if isRetry:
+                testCase.write("if(res == 0):\n");
+                GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, True)
             testCase.write("if(res != defaultres):\n");
             PauseIfError(testCase, "\t")
+            isRetry = False;
 
 #生成测试动态库信息
 def GenTestDllInfo(sheet_obj, testCase):
