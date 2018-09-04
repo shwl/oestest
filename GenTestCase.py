@@ -37,6 +37,13 @@ def PrintOutParam(sheet_obj, testCase, funcname, i, nrows, colindex, indentation
             break
     testCase.write(indentation + "\n")
 
+#输出函数名称和返回值
+def PrintRes(type):
+    if(type == "wchar_t*"):
+        return "print(funcname, \"res:\", c_wchar_p(res).value)\n\n";
+    else:
+        return "print(funcname, \"res:\", res)\n\n"
+
 #生成参数列表和测试函数
 def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex, isRetry):
     indentation = ""    #缩进
@@ -95,7 +102,10 @@ def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex
     
     #函数调用
     funcendstr = ")\n"  #函数结束字符串
-    printres = "print(funcname, \"res:\", res)\n\n"    #输出函数名称和返回值
+    restype = "";
+    if sheet_obj.ncols >= colindex + 9:
+        restype = sheet_obj.cell_value(i, colindex + 9)
+    printres = PrintRes(restype)    #输出函数名称和返回值
     testCase.write(indentation + "res = %s.%s("%(tgdll, funcname))
     if(j + 1 == nrows)and(0 == len(funcname1)):
         j = j + 1
@@ -105,7 +115,7 @@ def GenParamListAndFunc(sheet_obj, testCase, tgdll, funcname, i, nrows, colindex
             break;
         if(k != i):
             testCase.write(", ")
-        print(funcname, "nrows:%d, k:%d, i:%d, j:%d"%(nrows, k, i, j), "param_%d"%(k - i))
+        #print(funcname, "nrows:%d, k:%d, i:%d, j:%d"%(nrows, k, i, j), "param_%d"%(k - i))
         testCase.write("param_%d"%(k - i))
     testCase.write(funcendstr + indentation + printres)
     globalResName = sheet_obj.cell_value(i, colindex + 8);
