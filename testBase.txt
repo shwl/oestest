@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+# 此文件由脚本自动生成,参考地址:https://github.com/shwl/oestest.git
 
 import os
 import ctypes
